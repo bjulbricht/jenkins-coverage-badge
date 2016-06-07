@@ -26,6 +26,10 @@ var getBadgeUrl = function(req, label, color) {
 	return badgeUrl
 }
 
+app.get('/test', function(req,req) {
+  console.log("testing....")
+})
+
 //cobertura
 app.get(coberturaPath + '*', function(req,res) {
 	var jurl = req.params[0]
@@ -53,11 +57,14 @@ app.get(coberturaPath + '*', function(req,res) {
 // https://mobilefirst-2-jenkins.swg-devops.com:8443/view/bms-analytics/job/bms-analytics-server-development-branch-nightly/lastSuccessfulBuild/jacoco/api/xml
 app.get(jacocoPath + '*', function(req,res) {
 	var jurl = req.params[0]
-        var proto = req.params.proto
+console.log("jurl = " + jurl);
+        var proto = 'https';
+console.log("proto = " + proto);
 	var url = proto + '://' + jurl + '/lastSuccessfulBuild/jacoco/api/xml'
-	console.log('[GET]   ' + jacocoPath + jurl)
+console.log("url = " + url);
+	console.log('[GET]   ' + url)
 
-	request(url, function(err, response, body) {
+	request({ 'url': url, 'headers': { 'Authorization': 'Basic ' + new Buffer('username:password').toString('base64') } }, function(err, response, body) {
 		if (!err && response.statusCode == 200) {
 			var xmlParser = new xml2js.Parser();
 			xmlParser.parseString(body, function (err, result) {
